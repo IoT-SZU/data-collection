@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        tools:context="cn.ac.futurenet.data_collection.CollectOriginalSignalActivity"
+        android:layout_height="match_parent">
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/btnLayout" android:layout_centerInParent="true">
+        <Button
+                android:text="Start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/startBtn"
+                android:onClick="clickStart"
+                android:layout_weight="1"/>
+        <Button
+                android:text="Send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/sendBtn"
+                android:layout_weight="1"
+                android:onClick="sendData"
+        />
+    </LinearLayout>
+    <TextView
+            android:text="Ready"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_below="@+id/btnLayout"
+            android:layout_centerHorizontal="true" android:id="@+id/textViewStatus"/>
+</RelativeLayout>
