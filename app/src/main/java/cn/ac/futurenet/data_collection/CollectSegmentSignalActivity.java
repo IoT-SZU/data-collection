@@ -177,16 +177,26 @@ public class CollectSegmentSignalActivity extends SignalDetectBaseActivity
                         sendData(null);
                     }
                 }
-                startBtn.setEnabled(true);
-                sendBtn.setEnabled(true);
-                deleteBtn.setEnabled(true);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        startBtn.setEnabled(true);
+                        sendBtn.setEnabled(true);
+                        deleteBtn.setEnabled(true);
+                    }
+                });
             }
         }
     }
 
     private void updateStatisticsInfo() {
-        statisticsInfo.setText(String.format(
-                "Total collected: %d\nHas sent: %d\nCurrent collected: %d\n",
-                totalSignalNum, hasSentSignalNum, totalSignalNum - hasSentSignalNum));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statisticsInfo.setText(String.format(
+                        "Total collected: %d\nHas sent: %d\nCurrent collected: %d\n",
+                        totalSignalNum, hasSentSignalNum, totalSignalNum - hasSentSignalNum));
+            }
+        });
     }
 }
