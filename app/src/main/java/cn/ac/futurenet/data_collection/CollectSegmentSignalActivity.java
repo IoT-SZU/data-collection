@@ -73,11 +73,16 @@ public class CollectSegmentSignalActivity extends SignalDetectBaseActivity
             return;
         }
 
-        startBtn.setEnabled(false);
-        sendBtn.setEnabled(false);
-        deleteBtn.setEnabled(false);
-        finishedCount = 0;
-        occurError = false;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startBtn.setEnabled(false);
+                sendBtn.setEnabled(false);
+                deleteBtn.setEnabled(false);
+                finishedCount = 0;
+                occurError = false;
+            }
+        });
 
         new Thread(new Runnable() {
             @Override
@@ -175,16 +180,17 @@ public class CollectSegmentSignalActivity extends SignalDetectBaseActivity
                     updateStatisticsInfo();
                     if (totalSignalNum > hasSentSignalNum) {
                         sendData(null);
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                startBtn.setEnabled(true);
+                                sendBtn.setEnabled(true);
+                                deleteBtn.setEnabled(true);
+                                    }
+                        });
                     }
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        startBtn.setEnabled(true);
-                        sendBtn.setEnabled(true);
-                        deleteBtn.setEnabled(true);
-                    }
-                });
             }
         }
     }
