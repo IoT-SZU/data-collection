@@ -1,6 +1,7 @@
 package cn.ac.futurenet.data_collection.utils;
 
 import android.hardware.SensorEvent;
+import android.util.Log;
 import android.util.SparseIntArray;
 
 import cn.ac.futurenet.data_collection.objects.Data;
@@ -52,6 +53,7 @@ public class SignalDetect implements DataCollectService.OnReceiveListener {
      * 信号起始位置
      */
     private int begin = 0;
+    private int gyroDiff = 0; // 陀螺仪与加速度计信号的位置差
 
     /**
      * 信号检测状态
@@ -187,6 +189,7 @@ public class SignalDetect implements DataCollectService.OnReceiveListener {
     private void waitSignal() {
         if (Math.abs(filteredDetectData40.get()) > THRESHOLD) {
             begin = filteredDetectData40.getLength() - beforeLen;
+            gyroDiff = data[1][0].getLength() - data[0][0].getLength();
             state = 2;
             listener.onStatusChanged(STATUS_FOUND);
         }
@@ -261,11 +264,12 @@ public class SignalDetect implements DataCollectService.OnReceiveListener {
     }
 
     private float[][][] getAllSignalData() {
+        Log.d(TAG, "getAllSignalData: gyroDiff = " + gyroDiff);
         float[][][] res = new float[data.length][][];
         for (int s = 0; s < data.length; ++s) {
             res[s] = new float[3][];
             for (int i = 0; i < 3; ++i) {
-                res[s][i] = data[s][i].get(begin, returnSignalLen);
+                res[s][i] = data[s][i].get(begin + (s == 0 ? 0 : gyroDiff), returnSignalLen);
             }
         }
         return res;

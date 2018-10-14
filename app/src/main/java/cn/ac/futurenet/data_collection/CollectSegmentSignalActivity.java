@@ -27,7 +27,7 @@ public class CollectSegmentSignalActivity extends SignalDetectBaseActivity
     int finishedCount;
     FileTransfer fileTransfer;
     CommonUtil util;
-    ArrayList<Float[][][]> signals = new ArrayList<>();
+    ArrayList<float[][][]> signals = new ArrayList<>();
 
     int totalSignalNum = 0; // 共检测到信号数量
     int hasSentSignalNum = 0; // 已发送信号数量
@@ -89,7 +89,7 @@ public class CollectSegmentSignalActivity extends SignalDetectBaseActivity
             public void run() {
                 FileTransfer.OnSendDataListener listener = CollectSegmentSignalActivity.this;
                 String directory = StorageService.getInstance().getDir();
-                Float[][][] signal = signals.get(0);
+                float[][][] signal = signals.get(0);
                 String data = ArrayUtil.join(signal[0][0]);
                 fileTransfer.sendFile(directory, "xAcceData", data, listener);
                 data = ArrayUtil.join(signal[0][1]);
@@ -122,14 +122,7 @@ public class CollectSegmentSignalActivity extends SignalDetectBaseActivity
             return;
         }
 
-        Float[][][] data = new Float[signal.length][][];
-        for (int i = 0; i < signal.length; ++i) {
-            data[i] = new Float[signal[i].length][];
-            for (int j = 0; j < signal[i].length; ++j) {
-                data[i][j] = new Float[signal[i][j].length];
-            }
-        }
-        signals.add(data);
+        signals.add(signal);
         ++totalSignalNum;
         updateStatisticsInfo();
     }
