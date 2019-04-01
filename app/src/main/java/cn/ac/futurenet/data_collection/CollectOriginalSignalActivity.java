@@ -9,12 +9,14 @@ import android.support.wearable.view.AcceptDenyDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cn.ac.futurenet.data_collection.services.AudioService;
 import cn.ac.futurenet.data_collection.services.DataCollectService;
 import cn.ac.futurenet.data_collection.services.StorageService;
 import cn.ac.futurenet.data_collection.utils.ArrayUtil;
 import cn.ac.futurenet.data_collection.utils.CommonUtil;
 import cn.ac.futurenet.data_collection.utils.FileTransfer;
 import cn.ac.futurenet.data_collection.utils.Window;
+import cn.ac.futurenet.data_collection.views.WaveView;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class CollectOriginalSignalActivity extends WearableActivity
     private Button startBtn;
     private Button sendBtn;
     private TextView textViewStatus;
+    private WaveView waveView;
 
     private int finishedCount;
     private boolean isRecording;
@@ -31,6 +34,7 @@ public class CollectOriginalSignalActivity extends WearableActivity
     private ArrayList<Float>[] gData;
 
     private DataCollectService service;
+    private AudioService audioService;
     private FileTransfer fileTransfer;
     private CommonUtil util;
 
@@ -42,8 +46,10 @@ public class CollectOriginalSignalActivity extends WearableActivity
         startBtn = findViewById(R.id.startBtn);
         sendBtn = findViewById(R.id.sendBtn);
         textViewStatus = findViewById(R.id.textViewStatus);
+        waveView = findViewById(R.id.waveView);
 
         service = DataCollectService.getInstance();
+        audioService = new AudioService();
         fileTransfer = new FileTransfer(
                 String.format("http://%s/file/", StorageService.getInstance().getIp()));
         util = CommonUtil.getInstance();
@@ -74,13 +80,19 @@ public class CollectOriginalSignalActivity extends WearableActivity
         startBtn.setText(isRecording ? "Stop" : "Start");
 
         if (isRecording) {
+            sendBtn.setVisibility(View.INVISIBLE);
+            waveView.setVisibility(View.VISIBLE);
             service.addEventListener(this);
+            audioService.startRecord(waveView);
             for (int i = 0; i < 3; ++i) {
                 aData[i].clear();
                 gData[i].clear();
             }
         } else {
+            sendBtn.setVisibility(View.VISIBLE);
+            waveView.setVisibility(View.INVISIBLE);
             service.removeEventListener(this);
+            audioService.stopRecrod();
         }
     }
 
